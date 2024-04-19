@@ -1,4 +1,4 @@
-print("Sensors and Actuators")
+
 
 import time
 import serial.tools.list_ports
@@ -20,6 +20,20 @@ portName = "/dev/ttyUSB1"
 print(portName)
 
 
+def addModbusCrc(msg):
+    crc = 0xFFFF
+    for n in range(len(msg)):
+        crc ^= msg[n]
+        for i in range(8):
+            if crc & 1:
+                crc >>= 1
+                crc ^= 0xA001
+            else:
+                crc >>= 1
+    ba = crc.to_bytes(2, byteorder='little')
+    msg.append(ba[0])
+    msg.append(ba[1])
+    return msg
 
 try:
     ser = serial.Serial(port=portName, baudrate=115200)
