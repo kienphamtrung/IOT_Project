@@ -50,8 +50,8 @@ relay2_OFF = [2, 6, 0, 0, 0, 0]
 relay3_ON = [3, 6, 0, 0, 0, 255]
 relay3_OFF = [3, 6, 0, 0, 0, 0]
 
-# relay4_ON = [4, 6, 0, 0, 0, 255]
-# relay4_OFF = [4, 6, 0, 0, 0, 0]
+relay4_ON = [4, 6, 0, 0, 0, 255]
+relay4_OFF = [4, 6, 0, 0, 0, 0]
 
 # relay5_ON = [5, 6, 0, 0, 0, 255]
 # relay5_OFF = [5, 6, 0, 0, 0, 0]
@@ -65,13 +65,32 @@ relay3_OFF = [3, 6, 0, 0, 0, 0]
 # relay8_ON = [8, 6, 0, 0, 0, 255]
 # relay8_OFF = [8, 6, 0, 0, 0, 0]
 
-def setDevice1(state):
-    if state == True:
-        ser.write(relay1_ON)
-    else:
-        ser.write(relay1_OFF)
+def setDeviceON(id):
+    match id:
+        case 1:
+            ser.write(addModbusCrc(relay1_ON))
+        case 2:
+            ser.write(addModbusCrc(relay2_ON))
+        case 3:
+            ser.write(addModbusCrc(relay3_ON))
+        case _:
+            print("Invalid ID")
     time.sleep(1)
     print(serial_read_data(ser))
+
+def setDeviceOFF(id):
+    match id:
+        case 1:
+            ser.write(addModbusCrc(relay1_OFF))
+        case 2:
+            ser.write(addModbusCrc(relay2_OFF))
+        case 3:
+            ser.write(addModbusCrc(relay3_OFF))
+        case _:
+            print("Invalid ID")
+    time.sleep(1)
+    print(serial_read_data(ser))
+
 
 
 
