@@ -7,7 +7,7 @@ import random
 
 AIO_FEED_IDs = ["nutnhan1", "nutnhan2"]
 AIO_USERNAME = "kienpham"
-AIO_KEY = "aio_AxnW73DQl0f5eourVBRKG9adzcDz"
+AIO_KEY = "aio_SuKF52Rtr6qWcBgobH2C6SAQWaek"
 
 def connected(client):
     print("Ket noi thanh cong ...")
@@ -81,5 +81,5 @@ while True:
     #     if previous_result != ai_result:
     #         client.publish("AI", ai_result)
       
-    readSerial(client)
+    # readSerial(client)
     time.sleep(1)
