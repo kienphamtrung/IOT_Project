@@ -1,29 +1,5 @@
-print("Sensors and Actuators")
-
 import time
 import serial.tools.list_ports
-
-def getPort():
-    ports = serial.tools.list_ports.comports()
-    N = len(ports)
-    commPort = "None"
-    for i in range(0, N):
-        port = ports[i]
-        strPort = str(port)
-        if "USB" in strPort:
-            splitPort = strPort.split(" ")
-            commPort = (splitPort[0])
-    return commPort
-    # return "/dev/ttyUSB1"
-
-portName = "/dev/ttyUSB1"
-print(portName)
-
-try:
-    ser = serial.Serial(port=portName, baudrate=115200)
-    print("Open successfully")
-except:
-    print("Can not open the port")
 
 def addModbusCrc(msg):
     crc = 0xFFFF
@@ -40,56 +16,57 @@ def addModbusCrc(msg):
     msg.append(ba[1])
     return msg
 
+def getPort():
+    ports = serial.tools.list_ports.comports()
+    N = len(ports)
+    commPort = "None"
+    for i in range(0, N):
+        port = ports[i]
+        strPort = str(port)
+        if "USB" in strPort:
+            splitPort = strPort.split(" ")
+            commPort = (splitPort[0])
+    return commPort
+    # return "/dev/ttyUSB1"
 
-# relay1_ON = [1, 6, 0, 0, 0, 255]
-# relay1_OFF = [1, 6, 0, 0, 0, 0]
+portName = getPort()
+print(portName)
 
-relay2_ON = [2, 6, 0, 0, 0, 255]
-relay2_OFF = [2, 6, 0, 0, 0, 0]
+try:
+    ser = serial.Serial(port=portName, baudrate=9600)
+    print("Open successfully")
+except:
+    print("Can not open the port")
 
-relay3_ON = [3, 6, 0, 0, 0, 255]
-relay3_OFF = [3, 6, 0, 0, 0, 0]
 
-relay4_ON = [4, 6, 0, 0, 0, 255]
-relay4_OFF = [4, 6, 0, 0, 0, 0]
+relay1_ON = [2, 6, 0, 0, 0, 255]
+relay1_OFF = [2, 6, 0, 0, 0, 0]
 
-# relay5_ON = [5, 6, 0, 0, 0, 255]
-# relay5_OFF = [5, 6, 0, 0, 0, 0]
+relay2_ON = [3, 6, 0, 0, 0, 255]
+relay2_OFF = [3, 6, 0, 0, 0, 0]
 
-# relay6_ON = [6, 6, 0, 0, 0, 255]
-# relay6_OFF = [6, 6, 0, 0, 0, 0]
-
-# relay7_ON = [7, 6, 0, 0, 0, 255]
-# relay7_OFF = [7, 6, 0, 0, 0, 0]
-
-# relay8_ON = [8, 6, 0, 0, 0, 255]
-# relay8_OFF = [8, 6, 0, 0, 0, 0]
+relay3_ON = [4, 6, 0, 0, 0, 255]
+relay3_OFF = [4, 6, 0, 0, 0, 0]
 
 def setDeviceON(id):
-    match id:
-        case 2:
-            ser.write(addModbusCrc(relay2_ON))
-        case 3:
-            ser.write(addModbusCrc(relay3_ON))
-        case 4:
-            ser.write(addModbusCrc(relay4_ON))
-
+    if id == 1:
+        ser.write(addModbusCrc(relay1_ON))
+    elif id == 2:
+        ser.write(addModbusCrc(relay2_ON))
+    elif id == 3:
+        ser.write(addModbusCrc(relay3_ON))
     time.sleep(1)
     print(serial_read_data(ser))
 
 def setDeviceOFF(id):
-    match id:
-        case 2:
-            ser.write(addModbusCrc(relay2_OFF))
-        case 3:
-            ser.write(addModbusCrc(relay3_OFF))
-        case 4:
-            ser.write(addModbusCrc(relay4_OFF))
-
+    if id == 1:
+        ser.write(addModbusCrc(relay1_OFF))
+    elif id == 2:
+        ser.write(addModbusCrc(relay2_OFF))
+    elif id == 3:
+        ser.write(addModbusCrc(relay3_OFF))
     time.sleep(1)
     print(serial_read_data(ser))
-
-
 
 
 def serial_read_data(ser):
@@ -105,6 +82,7 @@ def serial_read_data(ser):
         else:
             return -1
     return 0
+
 
 soil_temperature =[1, 3, 0, 6, 0, 1]
 def readTemperature():
@@ -132,6 +110,22 @@ def readSerial(client):
     client.publish("cambien2", readMoisture())
 
 # while True:
+#     print("TEST ACTUATOR")
+#     setDeviceON(1)
+#     time.sleep(1)
+#     setDeviceOFF(1)
+#     time.sleep(1)
+#
+#     setDeviceON(2)
+#     time.sleep(1)
+#     setDeviceOFF(2)
+#     time.sleep(1)
+#
+#     setDeviceON(3)
+#     time.sleep(1)
+#     setDeviceOFF(3)
+#     time.sleep(1)
+#
 #     print("TEST SENSOR")
 #     print(readMoisture())
 #     time.sleep(1)

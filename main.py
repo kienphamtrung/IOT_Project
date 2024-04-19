@@ -7,7 +7,7 @@ import random
 from rs485 import *
 AIO_FEED_IDs = ["nutnhan1", "nutnhan2"]
 AIO_USERNAME = "kienpham"
-AIO_KEY = "aio_SuKF52Rtr6qWcBgobH2C6SAQWaek"
+AIO_KEY = "aio_TjYj76y27QIm78n0MulDmG4Jvu1Y"
 
 def connected(client):
     print("Ket noi thanh cong ...")
@@ -24,9 +24,9 @@ def disconnected(client):
 def message(client , feed_id , payload):
     print("Nhan du lieu: " + payload + " feed id: " + feed_id)
     if feed_id =="nutnhan1":  
-        writeData(2, payload)
+        writeData(1, payload)
     if feed_id =="nutnhan2":
-        writeData(3, payload)
+        writeData(2, payload)
 
 
 client = MQTTClient(AIO_USERNAME , AIO_KEY)
@@ -75,5 +75,5 @@ while True:
     #     if previous_result != ai_result:
     #         client.publish("AI", ai_result)
       
-    readSerial(client)
+    # readSerial(client)
     time.sleep(1)
