@@ -67,27 +67,25 @@ relay4_OFF = [4, 6, 0, 0, 0, 0]
 
 def setDeviceON(id):
     match id:
-        case 1:
-            ser.write(addModbusCrc(relay1_ON))
         case 2:
             ser.write(addModbusCrc(relay2_ON))
         case 3:
             ser.write(addModbusCrc(relay3_ON))
-        case _:
-            print("Invalid ID")
+        case 4:
+            ser.write(addModbusCrc(relay4_ON))
+
     time.sleep(1)
     print(serial_read_data(ser))
 
 def setDeviceOFF(id):
     match id:
-        case 1:
-            ser.write(addModbusCrc(relay1_OFF))
         case 2:
             ser.write(addModbusCrc(relay2_OFF))
         case 3:
             ser.write(addModbusCrc(relay3_OFF))
-        case _:
-            print("Invalid ID")
+        case 4:
+            ser.write(addModbusCrc(relay4_OFF))
+
     time.sleep(1)
     print(serial_read_data(ser))
 
@@ -108,23 +106,34 @@ def serial_read_data(ser):
             return -1
     return 0
 
-soil_temperature =[1, 3, 0, 6, 0, 1, 100, 11]
+soil_temperature =[1, 3, 0, 6, 0, 1]
 def readTemperature():
     serial_read_data(ser)
-    ser.write(soil_temperature)
+    ser.write(addModbusCrc(soil_temperature))
     time.sleep(1)
     return serial_read_data(ser)
 
-soil_moisture = [1, 3, 0, 7, 0, 1, 53, 203]
+soil_moisture = [1, 3, 0, 7, 0, 1]
 def readMoisture():
     serial_read_data(ser)
-    ser.write(soil_moisture)
+    ser.write(addModbusCrc(soil_moisture))
     time.sleep(1)
     return serial_read_data(ser)
 
-while True:
-    print("TEST SENSOR")
-    print(readMoisture())
-    time.sleep(1)
-    print(readTemperature())
-    time.sleep(1)
+def writeData(id, state):
+    if state == "1":
+        setDeviceON(id)
+    else:
+        setDeviceOFF(id)
+
+def readSerial(client):
+    client.publish("cambien1", readTemperature())
+    time.sleep(2)
+    client.publish("cambien2", readMoisture())
+
+# while True:
+#     print("TEST SENSOR")
+#     print(readMoisture())
+#     time.sleep(1)
+#     print(readTemperature())
+#     time.sleep(1)
