@@ -4,7 +4,7 @@ import time
 import random
 # from simple_ai import *
 # from uart import *
-
+from rs485 import *
 AIO_FEED_IDs = ["nutnhan1", "nutnhan2"]
 AIO_USERNAME = "kienpham"
 AIO_KEY = "aio_SuKF52Rtr6qWcBgobH2C6SAQWaek"
@@ -24,16 +24,11 @@ def disconnected(client):
 def message(client , feed_id , payload):
     print("Nhan du lieu: " + payload + " feed id: " + feed_id)
     if feed_id =="nutnhan1":  
-        if payload == "1":
-            writeData("LIGhT_ON")
-        else:
-            writeData("LIGHT_OFF")
-    
+        writeData(2, payload)
+
     if feed_id =="nutnhan2":
-        if payload == "1":
-            writeData("PUMP_ON")
-        else:
-            writeData("PUMP_OFF")
+        writeData(3, payload)
+
 
 client = MQTTClient(AIO_USERNAME , AIO_KEY)
 client.on_connect = connected
