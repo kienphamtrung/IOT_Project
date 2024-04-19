@@ -25,7 +25,6 @@ def message(client , feed_id , payload):
     print("Nhan du lieu: " + payload + " feed id: " + feed_id)
     if feed_id =="nutnhan1":  
         writeData(2, payload)
-
     if feed_id =="nutnhan2":
         writeData(3, payload)
 
@@ -76,5 +75,5 @@ while True:
     #     if previous_result != ai_result:
     #         client.publish("AI", ai_result)
       
-    # readSerial(client)
+    readSerial(client)
     time.sleep(1)
