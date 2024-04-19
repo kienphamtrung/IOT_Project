@@ -39,32 +39,36 @@ except:
     print("Can not open the port")
 
 
-relay1_ON = [2, 6, 0, 0, 0, 255]
-relay1_OFF = [2, 6, 0, 0, 0, 0]
+relay2_ON = [2, 6, 0, 0, 0, 255]
+relay2_OFF = [2, 6, 0, 0, 0, 0]
 
-relay2_ON = [3, 6, 0, 0, 0, 255]
-relay2_OFF = [3, 6, 0, 0, 0, 0]
+relay3_ON = [3, 6, 0, 0, 0, 255]
+relay3_OFF = [3, 6, 0, 0, 0, 0]
 
-relay3_ON = [4, 6, 0, 0, 0, 255]
-relay3_OFF = [4, 6, 0, 0, 0, 0]
+relay4_ON = [4, 6, 0, 0, 0, 255]
+relay4_OFF = [4, 6, 0, 0, 0, 0]
 
 def setDeviceON(id):
-    if id == 1:
-        ser.write(addModbusCrc(relay1_ON))
-    elif id == 2:
-        ser.write(addModbusCrc(relay2_ON))
-    elif id == 3:
-        ser.write(addModbusCrc(relay3_ON))
+    match id:
+        case 2:
+            ser.write(addModbusCrc(relay2_ON))
+        case 3:
+            ser.write(addModbusCrc(relay3_ON))
+        case 4:
+            ser.write(addModbusCrc(relay4_ON))
     time.sleep(1)
     print(serial_read_data(ser))
 
+
 def setDeviceOFF(id):
-    if id == 1:
-        ser.write(addModbusCrc(relay1_OFF))
-    elif id == 2:
-        ser.write(addModbusCrc(relay2_OFF))
-    elif id == 3:
-        ser.write(addModbusCrc(relay3_OFF))
+    match id:
+        case 2:
+            ser.write(addModbusCrc(relay2_OFF))
+        case 3:
+            ser.write(addModbusCrc(relay3_OFF))
+        case 4:
+            ser.write(addModbusCrc(relay4_OFF))
+
     time.sleep(1)
     print(serial_read_data(ser))
 
