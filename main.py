@@ -2,12 +2,13 @@ import sys
 from Adafruit_IO import MQTTClient
 import time
 import random
+# from fsm import *
 # from simple_ai import *
 # from uart import *
 from rs485 import *
 AIO_FEED_IDs = ["nutnhan1", "nutnhan2"]
 AIO_USERNAME = "kienpham"
-AIO_KEY = "aio_TjYj76y27QIm78n0MulDmG4Jvu1Y"
+AIO_KEY = "aio_aSjg21TMvndcyD7i1X64FA46g8pa"
 
 def connected(client):
     print("Ket noi thanh cong ...")
@@ -42,28 +43,28 @@ counter_ai = 5
 ai_result =""
 previous_result =""
 while True:
-    # counter = counter - 1
-    # if counter <= 0:
-    #         counter = 10
-    #         #TODO
-    #         print("Random data is publishing...")
-    #         if sensor_type == 0:
-    #                 temp = random.randint(10, 20)
-    #                 print("Temperature..." + str(temp))
+    counter = counter - 1
+    if counter <= 0:
+            counter = 10
+            
+            print("Random data is publishing...")
+            if sensor_type == 0:
+                    temp = random.randint(10, 20)
+                    print("Temperature..." + str(temp))
 
-    #                 client.publish("cambien1", temp)
-    #                 sensor_type = 1
-    #         elif sensor_type == 1:
-    #                 humid = random.randint(0, 100)
-    #                 print("Humidity... " + str(humid))
-    #                 client.publish("cambien2", humid)
-    #                 sensor_type = 2
-    #         elif sensor_type == 2:
-    #                 light = random.randint(0, 500)
-    #                 print("Light..." + str(light))
+                    client.publish("cambien1", temp)
+                    sensor_type = 1
+            elif sensor_type == 1:
+                    humid = random.randint(0, 100)
+                    print("Humidity... " + str(humid))
+                    client.publish("cambien2", humid)
+                    sensor_type = 2
+            elif sensor_type == 2:
+                    light = random.randint(0, 500)
+                    print("Light..." + str(light))
 
-    #                 client.publish("cambien3", light)
-    #                 sensor_type = 0
+                    client.publish("cambien3", light)
+                    sensor_type = 0
     
     # counter_ai = counter_ai - 1
             
@@ -75,5 +76,5 @@ while True:
     #     if previous_result != ai_result:
     #         client.publish("AI", ai_result)
       
-    readSerial(client)
+    # readSerial(client)
     time.sleep(1)

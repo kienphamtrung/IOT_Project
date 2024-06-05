@@ -1,0 +1,166 @@
+import time
+from datetime import datetime
+
+import json
+from Adafruit_IO import Client, Feed, Data
+ADAFRUIT_IO_USERNAME = 'kienpham'
+ADAFRUIT_IO_KEY = 'aio_aSjg21TMvndcyD7i1X64FA46g8pa'
+
+
+# Create an instance of the Adafruit IO client
+aio = Client(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
+
+# Get data from a specific feed
+feed_name1 = 'sched1'  # Replace with your feed name
+data1 = aio.receive(feed_name1)
+format_data1 = json.loads(data1.value)
+
+# Print the data
+print(format_data1)
+print(format_data1.get('cycle'))
+
+class IrrigationSchedule:
+    def __init__(self, cycle, flow1, flow2, flow3, isActive, schedulerName, startTime, stopTime):
+        self.cycle = cycle
+        self.flow1 = flow1
+        self.flow2 = flow2
+        self.flow3 = flow3
+        self.isActive = isActive
+        self.schedulerName = schedulerName
+        self.startTime = startTime
+        self.stopTime = stopTime
+
+def create_irrigation_schedule(cycle, flow1, flow2, flow3, isActive, schedulerName, startTime, stopTime):
+    return IrrigationSchedule(cycle, flow1, flow2, flow3, isActive, schedulerName, startTime, stopTime)
+
+# Create instances of the IrrigationSchedule class using the function
+schedule1 = create_irrigation_schedule(format_data1.get('cycle'), format_data1.get('flow1'), format_data1.get('flow2'), format_data1.get('flow3'), format_data1.get('isActive'), format_data1.get('schedulerName'), format_data1.get('startTime'), format_data1.get('stopTime'))
+# schedule1 = create_irrigation_schedule(3, 4, 5, 6, False, "Irrigation Schedule1", "22:02", "22:04")
+schedule2 = create_irrigation_schedule(3, 6, 7, 8, True, "Irrigation Schedule2", "22:29", "22:32")
+schedule3 = create_irrigation_schedule(4, 9, 10, 11, True, "Irrigation Schedule3", "22:33", "22:40")
+
+# Print the details of each schedule to verify
+# print(vars(schedule1))
+# print(vars(schedule2))
+# print(vars(schedule3))
+
+schedules = [schedule1, schedule2, schedule3]
+# print(vars(schedules[0]))
+# if schedules[1].startTime == (datetime.now()).strftime("%H:%M"):
+#     print("ON TIME")
+
+IDLE = 0
+MIXER1 = 1
+MIXER2 = 2
+MIXER3 = 3
+PUMP_IN = 4
+SELECTOR = 5
+PUMP_OUT = 6
+NEXT_CYCLE = 7
+END = 8
+timeProcess = 0
+
+schedule_id = 0
+status = IDLE
+cycle = 0
+count = 0
+started = False
+
+def fsm(schedules):
+    global status, cycle, count, schedule_id, started
+    if schedules[schedule_id].isActive == False:
+        schedule_id = schedule_id + 1
+        if schedule_id >= 3:
+            schedule_id = 0
+        status = IDLE
+    
+    if started == True and schedules[schedule_id].stopTime == (datetime.now()).strftime("%H:%M"):
+        schedule_id = schedule_id + 1
+        started = False
+        if schedule_id >= 3:
+            schedule_id = 0
+        status = IDLE
+
+
+    if status == IDLE:
+        print("IDLE")
+        if(schedules[schedule_id].startTime == (datetime.now()).strftime("%H:%M")):
+          started = True
+          status = MIXER1
+          count = schedules[schedule_id].flow1
+          print("CYCLE: " + str(cycle))
+          print("MIXER1")
+          print("TimeProcess: "+ str(count))
+
+    elif status == MIXER1:
+        if count <= 0:
+            print("MIXER2")
+            status = MIXER2
+            count = schedules[schedule_id].flow2
+        
+        print("TimeProcess: "+ str(count))
+    
+    elif status == MIXER2:
+        if count <= 0:
+            print("MIXER3")
+            status = MIXER3
+            count = schedules[schedule_id].flow3
+
+        print("TimeProcess: "+ str(count))
+    
+    elif status == MIXER3:
+        if count <= 0:
+            print("PUMP_IN")
+            status = PUMP_IN
+            count = 5
+
+        print("TimeProcess: "+ str(count))
+    
+    elif status == PUMP_IN:
+        if count <= 0:
+            print("SELECTOR")
+            status = SELECTOR
+            print("Area selected: " + str(schedules[schedule_id].cycle % 3))
+            count = 2
+
+        print("TimeProcess: "+ str(count))
+    elif status == SELECTOR:
+        if count <= 0:
+            print("PUMP_OUT")
+            status = PUMP_OUT
+            count = 5
+        print("TimeProcess: "+ str(count))
+
+    elif status == PUMP_OUT:
+        if count <= 0:
+            print("NEXT_CYCLE")
+            status = NEXT_CYCLE
+        
+        if count > 0:
+            print("TimeProcess: "+ str(count))
+    
+    elif status == NEXT_CYCLE:
+        cycle += 1
+        if cycle >= schedules[schedule_id].cycle:
+            print("WAITING_NEXT_SCHEDULE")
+            started = False
+            schedule_id +=1
+            if schedule_id >= 3:
+               print("END")
+               schedule_id = 0
+
+            status = IDLE
+            cycle = 0
+        else:
+            status = MIXER1
+            count = schedules[schedule_id].flow1
+            print("CYCLE: " + str(cycle))
+            print("MIXER1")
+            print("TimeProcess: "+ str(count))
+
+
+    count -=1
+
+# while True:
+#     fsm(schedules)
+#     time.sleep(1)

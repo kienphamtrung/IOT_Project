@@ -38,6 +38,8 @@ try:
 except:
     print("Can not open the port")
 
+relay1_ON = [1, 6, 0, 0, 0, 255]
+relay1_OFF = [1, 6, 0, 0, 0, 0]
 
 relay2_ON = [2, 6, 0, 0, 0, 255]
 relay2_OFF = [2, 6, 0, 0, 0, 0]
@@ -48,26 +50,59 @@ relay3_OFF = [3, 6, 0, 0, 0, 0]
 relay4_ON = [4, 6, 0, 0, 0, 255]
 relay4_OFF = [4, 6, 0, 0, 0, 0]
 
+relay5_ON = [5, 6, 0, 0, 0, 255]
+relay5_OFF = [5, 6, 0, 0, 0, 0]
+
+relay6_ON = [6, 6, 0, 0, 0, 255]
+relay6_OFF = [6, 6, 0, 0, 0, 0]
+
+relay7_ON = [7, 6, 0, 0, 0, 255]
+relay7_OFF = [7, 6, 0, 0, 0, 0]
+
+relay8_ON = [8, 6, 0, 0, 0, 255]
+relay8_OFF = [8, 6, 0, 0, 0, 0]
+
 def setDeviceON(id):
     match id:
+        case 1:
+            ser.write(addModbusCrc(relay1_ON))
         case 2:
             ser.write(addModbusCrc(relay2_ON))
         case 3:
             ser.write(addModbusCrc(relay3_ON))
         case 4:
             ser.write(addModbusCrc(relay4_ON))
+        case 5:
+            ser.write(addModbusCrc(relay5_ON))
+        case 6:
+            ser.write(addModbusCrc(relay6_ON))
+        case 7:
+            ser.write(addModbusCrc(relay7_ON))
+        case 8:
+            ser.write(addModbusCrc(relay8_ON))
+
     time.sleep(1)
     print(serial_read_data(ser))
 
 
 def setDeviceOFF(id):
     match id:
+        case 1:
+            ser.write(addModbusCrc(relay1_OFF))
         case 2:
             ser.write(addModbusCrc(relay2_OFF))
         case 3:
             ser.write(addModbusCrc(relay3_OFF))
         case 4:
             ser.write(addModbusCrc(relay4_OFF))
+        case 5:
+            ser.write(addModbusCrc(relay5_OFF))
+        case 6:
+            ser.write(addModbusCrc(relay6_OFF))
+        case 7:
+            ser.write(addModbusCrc(relay7_OFF))
+        case 8:
+            ser.write(addModbusCrc(relay8_OFF))
 
     time.sleep(1)
     print(serial_read_data(ser))
@@ -111,9 +146,9 @@ def writeData(id, state):
         setDeviceOFF(id)
 
 def readSerial(client):
-    client.publish("cambien1", readTemperature())
+    client.publish("cambien1", readTemperature()/100)
     time.sleep(2)
-    client.publish("cambien2", readMoisture())
+    client.publish("cambien2", readMoisture()/100)
 
 # while True:
 #     print("TEST ACTUATOR")
