@@ -75,9 +75,24 @@ cycle = 0
 count = 0
 count1 = 0
 started = False
+area_selected = -1
+
+def area_selector(area):
+    if area == 0:
+        setDeviceON(4)
+        setDeviceOFF(5)
+        setDeviceOFF(6)
+    elif area == 1:
+        setDeviceOFF(4)
+        setDeviceON(5)
+        setDeviceOFF(6)
+    elif area == 2:
+        setDeviceOFF(4)
+        setDeviceOFF(5)
+        setDeviceON(6)
 
 def fsm(schedules, client):
-    global status, cycle, count,count1, schedule_id, started
+    global status, cycle, count,count1, schedule_id, started, area_selected
     if count1 == 0:
        readSerial(client)
     if schedules[schedule_id].isActive == False:
@@ -102,37 +117,47 @@ def fsm(schedules, client):
           count = schedules[schedule_id].flow1
           print("CYCLE: " + str(cycle))
           print("MIXER1")
+          setDeviceON(1)
           print("TimeProcess: "+ str(count))
 
     elif status == MIXER1:
         if count <= 0:
+            setDeviceOFF(1)
             print("MIXER2")
             status = MIXER2
             count = schedules[schedule_id].flow2
+            setDeviceON(2)
         
         print("TimeProcess: "+ str(count))
     
     elif status == MIXER2:
         if count <= 0:
+            setDeviceOFF(2)
             print("MIXER3")
             status = MIXER3
             count = schedules[schedule_id].flow3
+            setDeviceON(3)
 
         print("TimeProcess: "+ str(count))
     
     elif status == MIXER3:
         if count <= 0:
+            setDeviceOFF(3)
             print("PUMP_IN")
             status = PUMP_IN
             count = 5
+            setDeviceON(7)
 
         print("TimeProcess: "+ str(count))
     
     elif status == PUMP_IN:
         if count <= 0:
+            setDeviceOFF(7)
             print("SELECTOR")
             status = SELECTOR
-            print("Area selected: " + str(schedules[schedule_id].cycle % 3))
+            if area_selected == -1:
+                area_selected = cycle%3
+            print("Area selected: " + str(area_selected))
             count = 2
 
         print("TimeProcess: "+ str(count))
@@ -141,10 +166,12 @@ def fsm(schedules, client):
             print("PUMP_OUT")
             status = PUMP_OUT
             count = 5
+            setDeviceON(8)
         print("TimeProcess: "+ str(count))
 
     elif status == PUMP_OUT:
         if count <= 0:
+            setDeviceOFF(8)
             print("NEXT_CYCLE")
             status = NEXT_CYCLE
         
@@ -155,6 +182,7 @@ def fsm(schedules, client):
         cycle += 1
         if cycle >= schedules[schedule_id].cycle:
             print("WAITING_NEXT_SCHEDULE")
+            area_selected = -1
             started = False
             schedule_id +=1
             if schedule_id >= 3:
@@ -168,6 +196,7 @@ def fsm(schedules, client):
             count = schedules[schedule_id].flow1
             print("CYCLE: " + str(cycle))
             print("MIXER1")
+            setDeviceON(1)
             print("TimeProcess: "+ str(count))
 
         
