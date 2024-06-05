@@ -42,6 +42,17 @@ class IrrigationSchedule:
 def create_irrigation_schedule(cycle, flow1, flow2, flow3, isActive, schedulerName, startTime, stopTime):
     return IrrigationSchedule(cycle, flow1, flow2, flow3, isActive, schedulerName, startTime, stopTime)
 
+def print_data(self):
+    print("Scheduler Name:", self.schedulerName)
+    print("Cycle:", self.cycle)
+    print("Flow 1:", self.flow1)
+    print("Flow 2:", self.flow2)
+    print("Flow 3:", self.flow3)
+    print("Area:", self.area)
+    print("Is Active:", self.isActive)
+    print("Start Time:", self.startTime)
+    print("Stop Time:", self.stopTime)
+    
 # Create instances of the IrrigationSchedule class using the function
 schedule1 = create_irrigation_schedule(format_data1.get('cycle'), format_data1.get('flow1'), format_data1.get('flow2'), format_data1.get('flow3'), format_data1.get('isActive'), format_data1.get('schedulerName'), format_data1.get('startTime'), format_data1.get('stopTime'))
 # schedule1 = create_irrigation_schedule(3, 4, 5, 6, False, "Irrigation Schedule1", "22:02", "22:04")
