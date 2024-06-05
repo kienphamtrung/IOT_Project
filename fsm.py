@@ -1,10 +1,10 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import json
 from Adafruit_IO import Client, Feed, Data
 ADAFRUIT_IO_USERNAME = 'kienpham'
-ADAFRUIT_IO_KEY = 'aio_aSjg21TMvndcyD7i1X64FA46g8pa'
+ADAFRUIT_IO_KEY = 'aio_KyUO58IJ9uDMPOixYtTZkfcO69eX'
 
 
 # Create an instance of the Adafruit IO client
@@ -48,7 +48,7 @@ schedules = [schedule1, schedule2, schedule3]
 # print(vars(schedules[0]))
 # if schedules[1].startTime == (datetime.now()).strftime("%H:%M"):
 #     print("ON TIME")
-
+#print ((datetime.now() + timedelta(hours=6)).strftime("%H:%M"))
 IDLE = 0
 MIXER1 = 1
 MIXER2 = 2
@@ -74,7 +74,7 @@ def fsm(schedules):
             schedule_id = 0
         status = IDLE
     
-    if started == True and schedules[schedule_id].stopTime == (datetime.now()).strftime("%H:%M"):
+    if started == True and schedules[schedule_id].stopTime == (datetime.now()+ timedelta(hours=6)).strftime("%H:%M"):
         schedule_id = schedule_id + 1
         started = False
         if schedule_id >= 3:
@@ -84,7 +84,7 @@ def fsm(schedules):
 
     if status == IDLE:
         print("IDLE")
-        if(schedules[schedule_id].startTime == (datetime.now()).strftime("%H:%M")):
+        if(schedules[schedule_id].startTime == (datetime.now()+ timedelta(hours=6)).strftime("%H:%M")):
           started = True
           status = MIXER1
           count = schedules[schedule_id].flow1
