@@ -6,7 +6,7 @@ from fsm import *
 # from simple_ai import *
 # from uart import *
 # from rs485 import *
-AIO_FEED_IDs = ["nutnhan1", "nutnhan2"]
+AIO_FEED_IDs = ["nutnhan1", "nutnhan2", "sched1", "sched2","sched3"]
 AIO_USERNAME = "kienpham"
 AIO_KEY = "aio_aSjg21TMvndcyD7i1X64FA46g8pa"
 
@@ -24,6 +24,12 @@ def disconnected(client):
 
 def message(client , feed_id , payload):
     print("Nhan du lieu: " + payload + " feed id: " + feed_id)
+    if feed_id =="sched1":
+        schedules[0] = create_irrigation_schedule(format_data1.get('cycle'), format_data1.get('flow1'), format_data1.get('flow2'), format_data1.get('flow3'), format_data1.get('isActive') , format_data1.get('schedulerName'), format_data1.get('startTime'), format_data1.get('stopTime'))
+    if feed_id =="sched2":
+        schedules[0] = create_irrigation_schedule(format_data2.get('cycle'), format_data2.get('flow1'), format_data2.get('flow2'), format_data2.get('flow3'), format_data2.get('isActive') , format_data2.get('schedulerName'), format_data2.get('startTime'), format_data2.get('stopTime'))
+    if feed_id =="sched3":
+        schedules[0] = create_irrigation_schedule(format_data3.get('cycle'), format_data3.get('flow1'), format_data3.get('flow2'), format_data3.get('flow3'), format_data3.get('isActive') , format_data3.get('schedulerName'), format_data3.get('startTime'), format_data3.get('stopTime'))
     if feed_id =="nutnhan1" and payload == '0':  
         schedules[0] =  create_irrigation_schedule(format_data1.get('cycle'), format_data1.get('flow1'), format_data1.get('flow2'), format_data1.get('flow3'), False , format_data1.get('schedulerName'), format_data1.get('startTime'), format_data1.get('stopTime'))
     if feed_id =="nutnhan1" and payload == '1':  
