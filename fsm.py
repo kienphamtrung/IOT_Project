@@ -16,6 +16,14 @@ feed_name1 = 'sched1'  # Replace with your feed name
 data1 = aio.receive(feed_name1)
 format_data1 = json.loads(data1.value)
 
+feed_name2 = 'sched2'  # Replace with your feed name
+data2 = aio.receive(feed_name2)
+format_data2 = json.loads(data2.value)
+
+feed_name3 = 'sched3'  # Replace with your feed name
+data3 = aio.receive(feed_name3)
+format_data3 = json.loads(data3.value)
+
 # Print the data
 print(format_data1)
 print(format_data1.get('cycle'))
@@ -37,13 +45,13 @@ def create_irrigation_schedule(cycle, flow1, flow2, flow3, isActive, schedulerNa
 # Create instances of the IrrigationSchedule class using the function
 schedule1 = create_irrigation_schedule(format_data1.get('cycle'), format_data1.get('flow1'), format_data1.get('flow2'), format_data1.get('flow3'), format_data1.get('isActive'), format_data1.get('schedulerName'), format_data1.get('startTime'), format_data1.get('stopTime'))
 # schedule1 = create_irrigation_schedule(3, 4, 5, 6, False, "Irrigation Schedule1", "22:02", "22:04")
-schedule2 = create_irrigation_schedule(3, 6, 7, 8, True, "Irrigation Schedule2", "22:29", "22:32")
-schedule3 = create_irrigation_schedule(4, 9, 10, 11, True, "Irrigation Schedule3", "22:33", "22:40")
+schedule2 = create_irrigation_schedule(format_data2.get('cycle'), format_data2.get('flow1'), format_data2.get('flow2'), format_data2.get('flow3'), format_data2.get('isActive'), format_data2.get('schedulerName'), format_data2.get('startTime'), format_data2.get('stopTime'))
+schedule3 = create_irrigation_schedule(format_data3.get('cycle'), format_data3.get('flow1'), format_data3.get('flow2'), format_data3.get('flow3'), format_data1.get('isActive'), format_data3.get('schedulerName'), format_data3.get('startTime'), format_data3.get('stopTime'))
 
 # Print the details of each schedule to verify
-# print(vars(schedule1))
-# print(vars(schedule2))
-# print(vars(schedule3))
+print(vars(schedule1))
+print(vars(schedule2))
+print(vars(schedule3))
 
 schedules = [schedule1, schedule2, schedule3]
 # print(vars(schedules[0]))
@@ -65,11 +73,11 @@ schedule_id = 0
 status = IDLE
 cycle = 0
 count = 0
-
+count1 = 0
 started = False
 
 def fsm(schedules, client):
-    global status, cycle, count, schedule_id, started
+    global status, cycle, count,count1, schedule_id, started
     if count1 == 0:
        readSerial(client)
     if schedules[schedule_id].isActive == False:
