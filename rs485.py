@@ -118,7 +118,6 @@ def serial_read_data(ser):
             array_size = len(data_array)
             value = data_array[array_size - 4] * 256 + data_array[array_size - 3]
             value = value
-            print(value)
             return value
         else:
             return -1
@@ -146,9 +145,14 @@ def writeData(id, state):
         setDeviceOFF(id)
 
 def readSerial(client):
-    client.publish("cambien1", readTemperature()/100)
+    temperature = readTemperature()/100
+    client.publish("cambien1", temperature)
+    print("Temperature: ", temperature)
     time.sleep(2)
-    client.publish("cambien2", readMoisture()/100)
+    humidity = readMoisture()/100
+    client.publish("cambien2", humidity)
+    print("Humidity: ", humidity)
+
 
 # while True:
 #     print("TEST ACTUATOR")
