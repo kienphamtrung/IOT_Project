@@ -79,6 +79,5 @@ while True:
     #         client.publish("AI", ai_result)
       
     # readSerial(client)
-    # fsm(schedules)
-    print(vars(schedules[0]))
+    fsm(schedules, client)
     time.sleep(1)

@@ -1,7 +1,8 @@
 import time
 from datetime import datetime, timedelta
-
+from rs485 import *
 import json
+from Adafruit_IO import MQTTClient
 from Adafruit_IO import Client, Feed, Data
 ADAFRUIT_IO_USERNAME = 'kienpham'
 ADAFRUIT_IO_KEY = 'aio_KyUO58IJ9uDMPOixYtTZkfcO69eX'
@@ -64,10 +65,13 @@ schedule_id = 0
 status = IDLE
 cycle = 0
 count = 0
+
 started = False
 
-def fsm(schedules):
+def fsm(schedules, client):
     global status, cycle, count, schedule_id, started
+    if count1 == 0:
+       readSerial(client)
     if schedules[schedule_id].isActive == False:
         schedule_id = schedule_id + 1
         if schedule_id >= 3:
@@ -158,8 +162,11 @@ def fsm(schedules):
             print("MIXER1")
             print("TimeProcess: "+ str(count))
 
-
+        
     count -=1
+    count1 +=1
+    if count1 == 10:
+        count1 = 0
 
 # while True:
 #     fsm(schedules)
