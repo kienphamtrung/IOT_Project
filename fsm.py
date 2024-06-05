@@ -103,9 +103,10 @@ def area_selector(area):
 
 def fsm(schedules, client):
     global status, cycle, count,count1, schedule_id, started, area_selected
-    if count1 == 0:
-       readSerial(client)
+    # if count1 == 0:
+    #    readSerial(client)
     if schedules[schedule_id].isActive == False:
+        print("Schedule " +  str(schedule_id) + " is not active")
         schedule_id = schedule_id + 1
         if schedule_id >= 3:
             schedule_id = 0
@@ -122,6 +123,7 @@ def fsm(schedules, client):
     if status == IDLE:
         print("IDLE")
         if(schedules[schedule_id].startTime == (datetime.now()+ timedelta(hours=6)).strftime("%H:%M")):
+          print("Schedule " +  str(schedule_id) + " is active now")
           started = True
           status = MIXER1
           count = schedules[schedule_id].flow1
@@ -211,9 +213,9 @@ def fsm(schedules, client):
 
         
     count -=1
-    count1 +=1
-    if count1 == 10:
-        count1 = 0
+    # count1 +=1
+    # if count1 == 10:
+    #     count1 = 0
 
 # while True:
 #     fsm(schedules)
