@@ -101,10 +101,15 @@ def area_selector(area):
         setDeviceOFF(5)
         setDeviceON(6)
 
+
+def publish_stage(client, id, cycle, status):
+    message = f"{id},{cycle},{status}"
+    client.publish("stage", message) 
+
 def fsm(schedules, client):
-    global status, cycle, count,count1, schedule_id, started, area_selected
-    # if count1 == 0:
-    #    readSerial(client)
+    global status, cycle, count, count1, schedule_id, started, area_selected
+    if count1 == 0:
+       readSerial(client)
     if schedules[schedule_id].isActive == False:
         print("Schedule " +  str(schedule_id) + " is not active")
         schedule_id = schedule_id + 1
@@ -130,6 +135,7 @@ def fsm(schedules, client):
           print("CYCLE: " + str(cycle))
           print("MIXER1")
           setDeviceON(1)
+          publish_stage(client, schedule_id, cycle, status)
           print("TimeProcess: "+ str(count))
 
     elif status == MIXER1:
@@ -139,7 +145,8 @@ def fsm(schedules, client):
             status = MIXER2
             count = schedules[schedule_id].flow2
             setDeviceON(2)
-        
+            publish_stage(client, schedule_id, cycle, status)
+
         print("TimeProcess: "+ str(count))
     
     elif status == MIXER2:
@@ -149,6 +156,7 @@ def fsm(schedules, client):
             status = MIXER3
             count = schedules[schedule_id].flow3
             setDeviceON(3)
+            publish_stage(client, schedule_id, cycle, status)
 
         print("TimeProcess: "+ str(count))
     
@@ -159,6 +167,7 @@ def fsm(schedules, client):
             status = PUMP_IN
             count = 5
             setDeviceON(7)
+            publish_stage(client, schedule_id, cycle, status)
 
         print("TimeProcess: "+ str(count))
     
@@ -171,6 +180,7 @@ def fsm(schedules, client):
                 area_selected = cycle%3
             print("Area selected: " + str(area_selected))
             count = 2
+            publish_stage(client, schedule_id, cycle, status)
 
         print("TimeProcess: "+ str(count))
     elif status == SELECTOR:
@@ -179,6 +189,8 @@ def fsm(schedules, client):
             status = PUMP_OUT
             count = 5
             setDeviceON(8)
+            publish_stage(client, schedule_id, cycle, status)
+
         print("TimeProcess: "+ str(count))
 
     elif status == PUMP_OUT:
@@ -186,7 +198,8 @@ def fsm(schedules, client):
             setDeviceOFF(8)
             print("NEXT_CYCLE")
             status = NEXT_CYCLE
-        
+            publish_stage(client, schedule_id, cycle, status)
+
         if count > 0:
             print("TimeProcess: "+ str(count))
     
@@ -209,13 +222,14 @@ def fsm(schedules, client):
             print("CYCLE: " + str(cycle))
             print("MIXER1")
             setDeviceON(1)
+            publish_stage(client, schedule_id, cycle, status)
             print("TimeProcess: "+ str(count))
 
         
     count -=1
-    # count1 +=1
-    # if count1 == 10:
-    #     count1 = 0
+    count1 +=1
+    if count1 == 10:
+        count1 = 0
 
 # while True:
 #     fsm(schedules)
