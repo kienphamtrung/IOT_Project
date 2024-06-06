@@ -6,7 +6,7 @@ from fsm import *
 # from simple_ai import *
 # from uart import *
 # from rs485 import *
-AIO_FEED_IDs = ["nutnhan1", "nutnhan2", "sched1", "sched2","sched3", "stage"]
+AIO_FEED_IDs = ["nutnhan1", "nutnhan2", "sched1", "sched2","sched3"]
 AIO_USERNAME = "kienpham"
 AIO_KEY = "aio_aSjg21TMvndcyD7i1X64FA46g8pa"
 

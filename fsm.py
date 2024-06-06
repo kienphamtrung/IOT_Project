@@ -86,7 +86,7 @@ count = 0
 count1 = 0
 started = False
 area_selected = -1
-
+wait = 1
 def area_selector(area):
     if area == 0:
         setDeviceON(4)
@@ -107,7 +107,7 @@ def publish_stage(client, id, cycle, status):
     client.publish("stage", message) 
 
 def fsm(schedules, client):
-    global status, cycle, count, count1, schedule_id, started, area_selected
+    global status, cycle, count, count1, schedule_id, started, area_selected, wait
     if count1 == 0:
        readSerial(client)
     if schedules[schedule_id].isActive == False:
@@ -116,6 +116,7 @@ def fsm(schedules, client):
         if schedule_id >= 3:
             schedule_id = 0
         status = IDLE
+        wait = 1
     
     if started == True and schedules[schedule_id].stopTime == (datetime.now()+ timedelta(hours=6)).strftime("%H:%M"):
         schedule_id = schedule_id + 1
@@ -123,11 +124,17 @@ def fsm(schedules, client):
         if schedule_id >= 3:
             schedule_id = 0
         status = IDLE
+        wait = 1
 
 
     if status == IDLE:
-        print("IDLE")
+        if wait == 1: 
+          print("IDLE")
+          print("Waiting for next schedule")
+          wait = 0
+        
         if(schedules[schedule_id].startTime == (datetime.now()+ timedelta(hours=6)).strftime("%H:%M")):
+          wait = 1
           print("Schedule " +  str(schedule_id) + " is active now")
           started = True
           status = MIXER1
@@ -206,7 +213,7 @@ def fsm(schedules, client):
     elif status == NEXT_CYCLE:
         cycle += 1
         if cycle >= schedules[schedule_id].cycle:
-            print("WAITING_NEXT_SCHEDULE")
+            print("END SCHEDULE")
             area_selected = -1
             started = False
             schedule_id +=1
