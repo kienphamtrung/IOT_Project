@@ -1,8 +1,7 @@
-import time
+
 from datetime import datetime, timedelta
 from rs485 import *
 import json
-from Adafruit_IO import MQTTClient
 from Adafruit_IO import Client, Feed, Data
 ADAFRUIT_IO_USERNAME = 'kienpham'
 ADAFRUIT_IO_KEY = 'aio_jIbm14DWszOcFD757DrsKCNyC7K8'
