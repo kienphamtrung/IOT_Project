@@ -23,9 +23,7 @@ feed_name3 = 'sched3'  # Replace with your feed name
 data3 = aio.receive(feed_name3)
 format_data3 = json.loads(data3.value)
 
-# Print the data
-# print(format_data1)
-# print(format_data1.get('cycle'))
+
 
 class IrrigationSchedule:
     def __init__(self, cycle, flow1, flow2, flow3, isActive, schedulerName, startTime, stopTime):
@@ -63,10 +61,7 @@ print(vars(schedule2))
 print(vars(schedule3))
 
 schedules = [schedule1, schedule2, schedule3]
-# print(vars(schedules[0]))
-# if schedules[1].startTime == (datetime.now()).strftime("%H:%M"):
-#     print("ON TIME")
-#print ((datetime.now() + timedelta(hours=6)).strftime("%H:%M"))
+
 IDLE = 0
 MIXER1 = 1
 MIXER2 = 2
@@ -115,6 +110,7 @@ def fsm(schedules, client):
         if schedule_id >= 3:
             schedule_id = 0
         status = IDLE
+        publish_stage(client, schedule_id, cycle, status)
         wait = 1
     
     if started == True and schedules[schedule_id].stopTime == (datetime.now()+ timedelta(hours=6)).strftime("%H:%M"):
@@ -123,6 +119,7 @@ def fsm(schedules, client):
         if schedule_id >= 3:
             schedule_id = 0
         status = IDLE
+        publish_stage(client, schedule_id, cycle, status)
         wait = 1
 
 
@@ -234,9 +231,6 @@ def fsm(schedules, client):
         
     count -=1
     count1 +=1
-    if count1 == 10:
+    if count1 == 20:
         count1 = 0
 
-# while True:
-#     fsm(schedules)
-#     time.sleep(1)

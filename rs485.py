@@ -148,7 +148,7 @@ def readSerial(client):
     temperature = readTemperature()/100
     client.publish("cambien1", temperature)
     print("Temperature: ", temperature)
-    time.sleep(2)
+    time.sleep(1)
     humidity = readMoisture()/100
     client.publish("cambien2", humidity)
     print("Humidity: ", humidity)
