@@ -181,6 +181,7 @@ def fsm(schedules, client):
             status = SELECTOR
             if area_selected == -1:
                 area_selected = cycle%3
+            area_selector(area_selected)
             print("Area selected: " + str(area_selected))
             count = 2
             publish_stage(client, schedule_id, cycle, status)
